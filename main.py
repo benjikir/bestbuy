@@ -3,6 +3,7 @@ import products
 
 
 def start(store_obj):
+    """Starts the Best Buy store user interface."""
     while True:
         print("\nWelcome to Best Buy Store!\n")
         print("1. List all products in store")
@@ -13,6 +14,7 @@ def start(store_obj):
         choice = input("Enter your choice: ")
 
         if choice == "1":
+            print("\nAvailable Products:")
             for idx, product in enumerate(store_obj.get_all_products(), start=1):
                 print(f"{idx}. {product.name} - ${product.price} - {product.quantity} in stock")
 
@@ -22,7 +24,9 @@ def start(store_obj):
         elif choice == "3":
             shopping_list = []
             all_products = store_obj.get_all_products()
+
             while True:
+                print("\nAvailable Products:")
                 for idx, product in enumerate(all_products, start=1):
                     print(f"{idx}. {product.name} - ${product.price} - {product.quantity} in stock")
 
@@ -32,13 +36,11 @@ def start(store_obj):
 
                 product = None
 
-                # Check if input is a number (index selection)
                 if product_choice.isdigit():
                     product_index = int(product_choice) - 1
                     if 0 <= product_index < len(all_products):
                         product = all_products[product_index]
                 else:
-                    # Check if input matches a product name
                     product = next((p for p in all_products if p.name.lower() == product_choice.lower()), None)
 
                 if not product:
@@ -73,12 +75,12 @@ def start(store_obj):
             print("Invalid choice. Please try again.")
 
 
-# setup initial stock of inventory
-product_list = [
+# Setup initial stock of inventory
+product_inventory = [
     products.Product("MacBook Air M2", price=1450, quantity=100),
     products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
     products.Product("Google Pixel 7", price=500, quantity=250)
 ]
 
-best_buy = store.Store(product_list)
+best_buy = store.Store(product_inventory)
 start(best_buy)
