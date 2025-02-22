@@ -13,23 +13,36 @@ def start(store_obj):
         choice = input("Enter your choice: ")
 
         if choice == "1":
-            for product in store_obj.get_all_products():
-                print(f"{product.name} - ${product.price} - {product.quantity} in stock")
+            for idx, product in enumerate(store_obj.get_all_products(), start=1):
+                print(f"{idx}. {product.name} - ${product.price} - {product.quantity} in stock")
 
         elif choice == "2":
             print(f"Total quantity in store: {store_obj.get_total_quantity()}")
 
         elif choice == "3":
             shopping_list = []
+            all_products = store_obj.get_all_products()
             while True:
-                product_name = input("Enter product name (or 'done' to finish): ")
-                if product_name.lower() == "done":
+                for idx, product in enumerate(all_products, start=1):
+                    print(f"{idx}. {product.name} - ${product.price} - {product.quantity} in stock")
+
+                product_choice = input("Enter product number or name (or 'done' to finish): ")
+                if product_choice.lower() == "done":
                     break
 
-                product = next((p for p in store_obj.get_all_products() if p.name.lower() == product_name.lower()),
-                               None)
+                product = None
+
+                # Check if input is a number (index selection)
+                if product_choice.isdigit():
+                    product_index = int(product_choice) - 1
+                    if 0 <= product_index < len(all_products):
+                        product = all_products[product_index]
+                else:
+                    # Check if input matches a product name
+                    product = next((p for p in all_products if p.name.lower() == product_choice.lower()), None)
+
                 if not product:
-                    print("Product not found. Please try again.")
+                    print("Invalid product selection. Please try again.")
                     continue
 
                 try:
