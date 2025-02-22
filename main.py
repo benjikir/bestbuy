@@ -26,16 +26,31 @@ def start(store_obj):
                 if product_name.lower() == "done":
                     break
 
-                quantity = int(input("Enter quantity: "))
-                product = next((p for p in store_obj.get_all_products() if p.name == product_name), None)
+                product = next((p for p in store_obj.get_all_products() if p.name.lower() == product_name.lower()),
+                               None)
+                if not product:
+                    print("Product not found. Please try again.")
+                    continue
 
-                if product and product.quantity >= quantity:
-                    shopping_list.append((product, quantity))
-                else:
-                    print("Product not available or insufficient stock.")
+                try:
+                    quantity = int(input("Enter quantity: "))
+                    if quantity <= 0:
+                        print("Quantity must be greater than zero.")
+                        continue
+                    if product.quantity < quantity:
+                        print(f"Not enough stock available. Only {product.quantity} left.")
+                        continue
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
+                    continue
 
-            total_price = store_obj.order(shopping_list)
-            print(f"Total price of your order: ${total_price}")
+                shopping_list.append((product, quantity))
+
+            if shopping_list:
+                total_price = store_obj.order(shopping_list)
+                print(f"Total price of your order: ${total_price}")
+            else:
+                print("No valid items in your order.")
 
         elif choice == "4":
             print("Thank you for shopping with us!")
