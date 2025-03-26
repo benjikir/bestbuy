@@ -4,12 +4,23 @@ import products
 
 class Store:
     def __init__(self, product_list: List[products.Product]):
+        if not isinstance(product_list, list):
+            raise TypeError("product_list must be a list.")
+        for product in product_list:
+            if not isinstance(product, products.Product):
+                raise TypeError("All elements in product_list must be Product objects.")
         self.product_list = product_list
 
     def add_product(self, product: products.Product):
+        if not isinstance(product, products.Product):
+            raise TypeError("product must be a Product object.")
         self.product_list.append(product)
 
     def remove_product(self, product: products.Product):
+        if not isinstance(product, products.Product):
+            raise TypeError("product must be a Product object.")
+        if product not in self.product_list:
+            raise ValueError("Product not found in the store.")
         self.product_list.remove(product)
 
     def get_total_quantity(self) -> int:
@@ -26,12 +37,3 @@ class Store:
                 total_price += product.price * quantity
         return total_price
 
-product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),
-                products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                products.Product("Google Pixel 7", price=500, quantity=250),
-               ]
-
-best_buy = Store(product_list)
-products = best_buy.get_all_products()
-print(best_buy.get_total_quantity())
-print(best_buy.order([(products[0], 1), (products[1], 2)]))
